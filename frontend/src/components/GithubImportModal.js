@@ -23,7 +23,10 @@ const GithubImportModal = ({ isModalOpen, closeModal, onImport, initialUsername 
         
         setLoading(true);
         try {
-            const { data } = await axios.get(`https://api.github.com/users/${searchUsername}/repos?per_page=100&sort=updated`);
+            const response = await fetch(`https://api.github.com/users/${searchUsername}/repos?per_page=100&sort=updated`);
+            if (!response.ok) throw new Error('GitHub API Error');
+            const data = await response.json();
+            
             const filteredRepos = data.filter(repo => !repo.fork);
             setRepos(filteredRepos);
             if (filteredRepos.length === 0) {

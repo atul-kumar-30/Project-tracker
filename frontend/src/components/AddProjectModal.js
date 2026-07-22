@@ -78,7 +78,9 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null, pre
             const repo = urlParts[1];
             
             setIsFetchingRepo(true);
-            const { data } = await axios.get(`https://api.github.com/repos/${owner}/${repo}`);
+            const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`);
+            if (!response.ok) throw new Error('GitHub API Error');
+            const data = await response.json();
             
             setTitle(data.name.replace(/-/g, ' '));
             if (data.description) setDesc(data.description);
