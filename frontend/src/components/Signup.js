@@ -69,7 +69,7 @@ const Signup = () => {
                                 <input
                                     id="password"
                                     name="password"
-                                    type="text"
+                                    type="password"
                                     autoComplete="new-password"
                                     required
                                     className="appearance-none relative block w-full px-4 py-3 border border-gray-600 bg-gray-700/50 placeholder-gray-400 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent sm:text-sm transition-all"
