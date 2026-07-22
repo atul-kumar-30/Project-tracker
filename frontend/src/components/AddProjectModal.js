@@ -111,6 +111,11 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null, pre
             }
             if (fetchedDesc) setDesc(fetchedDesc);
             
+            if (data.created_at) setStartDate(new Date(data.created_at).toISOString().split('T')[0]);
+            if (data.updated_at) setEndDate(new Date(data.updated_at).toISOString().split('T')[0]);
+            if (data.language) setCategories(prev => prev.includes(data.language) ? prev : [...prev, data.language]);
+            if (data.homepage) setDeployLink(data.homepage);
+            
             toast.success('Project details fetched successfully!');
         } catch (error) {
             console.error(error);
