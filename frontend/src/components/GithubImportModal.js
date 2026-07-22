@@ -42,12 +42,44 @@ const GithubImportModal = ({ isModalOpen, closeModal, onImport, initialUsername 
         }
     };
 
-    const handleImportSingle = (repo) => {
+    const extractDescriptionFromReadme = (text) => {
+        const lines = text.split('\n');
+        for (let line of lines) {
+            line = line.trim();
+            // Skip headings, empty lines, badges, image tags, html tags
+            if (!line || line.startsWith('#') || line.startsWith('[!') || line.startsWith('<') || line.startsWith('![')) continue;
+            // Clean markdown
+            let clean = line.replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1').replace(/[*_~`]/g, '');
+            if (clean.length > 15) return clean.length > 250 ? clean.substring(0, 250) + '...' : clean;
+        }
+        return '';
+    };
+
+    const handleImportSingle = async (repo) => {
         const categories = repo.language ? [repo.language] : [];
+        
+        let description = repo.description || '';
+        
+        if (!description) {
+            try {
+                // We use toast.loading since it might take a second to fetch the README
+                const toastId = toast.loading('Extracting description from README...');
+                const res = await fetch(`https://api.github.com/repos/${repo.owner.login}/${repo.name}/readme`, {
+                    headers: { 'Accept': 'application/vnd.github.v3.raw' }
+                });
+                if (res.ok) {
+                    const text = await res.text();
+                    description = extractDescriptionFromReadme(text);
+                }
+                toast.dismiss(toastId);
+            } catch (e) {
+                console.error(e);
+            }
+        }
         
         const payload = {
             title: repo.name.replace(/-/g, ' '),
-            description: repo.description || '',
+            description: description,
             status: 'Completed',
             startDate: repo.created_at ? new Date(repo.created_at).toISOString().split('T')[0] : '',
             endDate: repo.updated_at ? new Date(repo.updated_at).toISOString().split('T')[0] : '',

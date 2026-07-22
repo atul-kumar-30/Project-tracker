@@ -66,6 +66,17 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null, pre
         }
     }, [isModalOpen, edit, id, prefillData]);
 
+    const extractDescriptionFromReadme = (text) => {
+        const lines = text.split('\n');
+        for (let line of lines) {
+            line = line.trim();
+            if (!line || line.startsWith('#') || line.startsWith('[!') || line.startsWith('<') || line.startsWith('![')) continue;
+            let clean = line.replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1').replace(/[*_~`]/g, '');
+            if (clean.length > 15) return clean.length > 250 ? clean.substring(0, 250) + '...' : clean;
+        }
+        return '';
+    };
+
     const handleFetchRepo = async () => {
         if (!githubLink.trim()) return toast.error('Please enter a GitHub repository link first');
         
@@ -83,7 +94,22 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null, pre
             const data = await response.json();
             
             setTitle(data.name.replace(/-/g, ' '));
-            if (data.description) setDesc(data.description);
+            
+            let fetchedDesc = data.description || '';
+            if (!fetchedDesc) {
+                try {
+                    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/readme`, {
+                        headers: { 'Accept': 'application/vnd.github.v3.raw' }
+                    });
+                    if (res.ok) {
+                        const text = await res.text();
+                        fetchedDesc = extractDescriptionFromReadme(text);
+                    }
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+            if (fetchedDesc) setDesc(fetchedDesc);
             
             toast.success('Project details fetched successfully!');
         } catch (error) {
