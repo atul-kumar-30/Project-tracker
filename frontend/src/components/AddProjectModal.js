@@ -3,7 +3,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import axios from "axios"
 import toast from 'react-hot-toast'
 
-const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) => {
+const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null, prefillData = null }) => {
 
     const [title, setTitle] = useState('')
     const [desc, setDesc] = useState('');
@@ -14,18 +14,14 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
     const [customCategory, setCustomCategory] = useState('');
     const [githubLink, setGithubLink] = useState('');
     const [deployLink, setDeployLink] = useState('');
+    const [isFetchingRepo, setIsFetchingRepo] = useState(false);
 
-    const TOP_LEVEL_DOMAINS = [
-        'Frontend', 'Backend', 'AI/ML', 'Database', 'Cloud', 
-        'Mobile', 'Desktop', 'Programming', 'Security', 'Tools'
-    ];
-    
-    const COMMON_TECHNOLOGIES = [
-        'React', 'Next.js', 'Vue.js', 'Angular', 'Tailwind CSS', 'Bootstrap', 'Redux', 
-        'Node.js', 'Express', 'Django', 'Flask', 'Spring Boot', 'FastAPI',
-        'MongoDB', 'PostgreSQL', 'MySQL', 'Redis', 'Firebase',
-        'AWS', 'GCP', 'Azure', 'Docker', 'Kubernetes', 
-        'Python', 'JavaScript', 'TypeScript', 'Java', 'C++', 'Go', 'Rust', 'C#'
+    const CATEGORY_OPTIONS = [
+        'Generative AI', 'AI/ML', 'Deep Learning', 'Computer Vision', 'NLP', 'LLM',
+        'Frontend', 'Backend', 'Full Stack', 'MERN Stack',
+        'Web App', 'Mobile App', 'Desktop App',
+        'API', 'Game Development', 'Compiler', 'Cybersecurity', 'Cloud', 'DevOps', 
+        'Blockchain', 'IoT', 'Automation', 'Data Science', 'Open Source'
     ];
 
     const handleCategoryToggle = (cat) => {
@@ -58,9 +54,43 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
                 .catch((error) => {
                     toast.error('Something went wrong')
                 })
+        } else if (isModalOpen && prefillData) {
+            setTitle(prefillData.title || '')
+            setDesc(prefillData.description || '')
+            setStatus(prefillData.status || 'Completed')
+            setStartDate(prefillData.startDate || '')
+            setEndDate(prefillData.endDate || '')
+            setCategories(prefillData.categories || [])
+            setGithubLink(prefillData.githubLink || '')
+            setDeployLink(prefillData.deployLink || '')
         }
-    }, [isModalOpen, edit, id]);
+    }, [isModalOpen, edit, id, prefillData]);
 
+    const handleFetchRepo = async () => {
+        if (!githubLink.trim()) return toast.error('Please enter a GitHub repository link first');
+        
+        try {
+            // Extract owner and repo from URL (e.g., https://github.com/owner/repo)
+            const urlParts = new URL(githubLink.trim()).pathname.split('/').filter(Boolean);
+            if (urlParts.length < 2) throw new Error('Invalid URL');
+            
+            const owner = urlParts[0];
+            const repo = urlParts[1];
+            
+            setIsFetchingRepo(true);
+            const { data } = await axios.get(`https://api.github.com/repos/${owner}/${repo}`);
+            
+            setTitle(data.name.replace(/-/g, ' '));
+            if (data.description) setDesc(data.description);
+            
+            toast.success('Project details fetched successfully!');
+        } catch (error) {
+            console.error(error);
+            toast.error('Could not fetch repo. Please ensure the link is a valid public GitHub repository.');
+        } finally {
+            setIsFetchingRepo(false);
+        }
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -185,9 +215,19 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
                                     
                                     <div className='grid grid-cols-2 gap-4 mb-6'>
                                         <div>
-                                            <label htmlFor="githubLink" className='block text-sm font-medium text-gray-300 mb-1.5 flex items-center space-x-1.5'>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-                                                <span>GitHub Repository</span>
+                                            <label htmlFor="githubLink" className='flex items-center justify-between mb-1.5'>
+                                                <div className="flex items-center space-x-1.5 text-sm font-medium text-gray-300">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                                                    <span>GitHub Repository</span>
+                                                </div>
+                                                <button 
+                                                    type="button" 
+                                                    onClick={handleFetchRepo}
+                                                    disabled={isFetchingRepo || !githubLink}
+                                                    className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition-colors disabled:opacity-50"
+                                                >
+                                                    {isFetchingRepo ? 'Fetching...' : 'Fetch Data'}
+                                                </button>
                                             </label>
                                             <input value={githubLink} onChange={(e) => setGithubLink(e.target.value)} type="url" placeholder="https://github.com/..." className='border border-gray-600 bg-gray-700 text-white rounded-lg w-full text-sm py-2.5 px-3 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition-all placeholder-gray-400' />
                                         </div>
@@ -201,9 +241,9 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
                                     </div>
 
                                     <div className='mb-6'>
-                                        <label className='block text-sm font-medium text-gray-300 mb-2'>Top-Level Domains</label>
-                                        <div className="flex flex-wrap gap-2 mb-4">
-                                            {TOP_LEVEL_DOMAINS.map((cat) => (
+                                        <label className='block text-sm font-medium text-gray-300 mb-2'>Project Types (Categories)</label>
+                                        <div className="flex flex-wrap gap-2 mb-3">
+                                            {CATEGORY_OPTIONS.map((cat) => (
                                                 <button
                                                     key={cat}
                                                     type="button"
@@ -213,16 +253,12 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
                                                     {cat}
                                                 </button>
                                             ))}
-                                        </div>
-
-                                        <label className='block text-sm font-medium text-gray-300 mb-2'>Technologies</label>
-                                        <div className="flex flex-wrap gap-2 mb-3">
-                                            {categories.filter(cat => !TOP_LEVEL_DOMAINS.includes(cat)).map((cat) => (
+                                            {categories.filter(cat => !CATEGORY_OPTIONS.includes(cat)).map((cat) => (
                                                 <button
                                                     key={cat}
                                                     type="button"
                                                     onClick={() => handleCategoryToggle(cat)}
-                                                    className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors bg-indigo-500/20 text-indigo-300 border-indigo-500/30 hover:bg-red-500/20 hover:text-red-400 hover:border-red-500/30 flex items-center space-x-1`}
+                                                    className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors bg-indigo-600 text-white border-indigo-600 flex items-center space-x-1`}
                                                 >
                                                     <span>{cat}</span>
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3 h-3">
@@ -230,21 +266,8 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
                                                     </svg>
                                                 </button>
                                             ))}
-                                            {categories.filter(cat => !TOP_LEVEL_DOMAINS.includes(cat)).length === 0 && (
-                                                <span className="text-xs text-gray-500 italic py-1.5">No specific technologies added yet.</span>
-                                            )}
                                         </div>
-                                        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-                                            <select 
-                                                value={customCategory}
-                                                onChange={(e) => setCustomCategory(e.target.value)}
-                                                className="border border-gray-600 bg-gray-700 text-white rounded-lg w-full sm:w-1/3 text-sm py-2 px-3 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition-all"
-                                            >
-                                                <option value="">Select a tech...</option>
-                                                {COMMON_TECHNOLOGIES.filter(t => !categories.includes(t)).map(tech => (
-                                                    <option key={tech} value={tech}>{tech}</option>
-                                                ))}
-                                            </select>
+                                        <div className="flex space-x-2">
                                             <input 
                                                 type="text" 
                                                 value={customCategory}
@@ -252,7 +275,7 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
                                                 onKeyDown={(e) => {
                                                     if (e.key === 'Enter') handleAddCustomCategory(e);
                                                 }}
-                                                placeholder="Or type a custom technology..." 
+                                                placeholder="Add custom category..." 
                                                 className="border border-gray-600 bg-gray-700 text-white rounded-lg w-full text-sm py-2 px-3 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition-all placeholder-gray-400"
                                             />
                                             <button 

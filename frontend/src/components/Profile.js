@@ -1,12 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
+import toast from 'react-hot-toast';
+import GithubImportModal from './GithubImportModal';
 
 const Profile = () => {
-    const { user } = useAuth();
+    const { user, fetchProfile } = useAuth();
     const [stats, setStats] = useState({ total: 0, active: 0, completed: 0 });
+    const [githubUsername, setGithubUsername] = useState('');
+    const [isEditingGithub, setIsEditingGithub] = useState(false);
+    const [isSavingGithub, setIsSavingGithub] = useState(false);
+    const [isGithubModalOpen, setGithubModalState] = useState(false);
 
     useEffect(() => {
+        if (user) {
+            setGithubUsername(user.githubUsername || '');
+        }
         axios.get('/projects/')
             .then((res) => {
                 const projects = res.data;
@@ -17,7 +26,27 @@ const Profile = () => {
                 });
             })
             .catch((err) => console.log(err));
-    }, []);
+    }, [user]);
+
+    const handleSaveGithub = async () => {
+        setIsSavingGithub(true);
+        try {
+            await axios.put('/auth/profile/github', { githubUsername: githubUsername.trim() });
+            toast.success('GitHub username saved!');
+            fetchProfile();
+            setIsEditingGithub(false);
+        } catch (error) {
+            toast.error('Failed to save GitHub username');
+        } finally {
+            setIsSavingGithub(false);
+        }
+    };
+
+    const handleImportFromProfile = (data) => {
+        const event = new CustomEvent('openCreateProjectModal', { detail: data });
+        document.dispatchEvent(event);
+        setGithubModalState(false);
+    };
 
     if (!user) return null;
 
@@ -70,7 +99,82 @@ const Profile = () => {
                     </div>
                 </div>
 
+                {/* Integrations Section */}
+                <h2 className="text-xl font-semibold text-white pt-4">Integrations</h2>
+                <div className="bg-gray-800/80 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-gray-700">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                            <div className="p-3 bg-gray-700/50 rounded-xl text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-semibold text-white">GitHub Connection</h3>
+                                <p className="text-sm text-gray-400">Connect your account to easily import repositories.</p>
+                            </div>
+                        </div>
+                        
+                        {isEditingGithub ? (
+                            <div className="flex items-center space-x-2">
+                                <input 
+                                    type="text" 
+                                    value={githubUsername}
+                                    onChange={(e) => setGithubUsername(e.target.value)}
+                                    placeholder="GitHub Username"
+                                    className="border border-gray-600 bg-gray-700 text-white rounded-lg text-sm py-2 px-3 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                />
+                                <button 
+                                    onClick={handleSaveGithub}
+                                    disabled={isSavingGithub}
+                                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-lg transition-colors"
+                                >
+                                    Save
+                                </button>
+                                <button 
+                                    onClick={() => {
+                                        setIsEditingGithub(false);
+                                        setGithubUsername(user.githubUsername || '');
+                                    }}
+                                    className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm font-medium rounded-lg transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="flex items-center space-x-4">
+                                {user.githubUsername ? (
+                                    <span className="text-sm font-medium text-gray-300 bg-gray-700 px-3 py-1.5 rounded-lg border border-gray-600">
+                                        @{user.githubUsername}
+                                    </span>
+                                ) : (
+                                    <span className="text-sm text-gray-500 italic">Not connected</span>
+                                )}
+                                <button 
+                                    onClick={() => setIsEditingGithub(true)}
+                                    className="text-sm text-indigo-400 hover:text-indigo-300 font-medium transition-colors"
+                                >
+                                    {user.githubUsername ? 'Edit' : 'Connect'}
+                                </button>
+                                {user.githubUsername && (
+                                    <button 
+                                        onClick={() => setGithubModalState(true)}
+                                        className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-lg transition-colors shadow-lg shadow-indigo-500/30 ml-4 flex items-center space-x-2"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                        <span>Import Projects</span>
+                                    </button>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </div>
+
             </div>
+            <GithubImportModal 
+                isModalOpen={isGithubModalOpen} 
+                closeModal={() => setGithubModalState(false)} 
+                onImport={handleImportFromProfile} 
+                initialUsername={user.githubUsername}
+            />
         </div>
     );
 };

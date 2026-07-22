@@ -12,8 +12,12 @@ const Dashboard = () => {
     const [selectedCategory, setSelectedCategory] = useState('All');
 
     const CATEGORY_OPTIONS = [
-        'All', 'Frontend', 'Backend', 'AI/ML', 'Database', 'Cloud', 
-        'Mobile', 'Desktop', 'Programming', 'Security', 'Tools'
+        'All',
+        'Generative AI', 'AI/ML', 'Deep Learning', 'Computer Vision', 'NLP', 'LLM',
+        'Frontend', 'Backend', 'Full Stack', 'MERN Stack',
+        'Web App', 'Mobile App', 'Desktop App',
+        'API', 'Game Development', 'Compiler', 'Cybersecurity', 'Cloud', 'DevOps', 
+        'Blockchain', 'IoT', 'Automation', 'Data Science', 'Open Source'
     ];
 
     const filteredProjects = projects.filter(project => {
@@ -93,7 +97,10 @@ const Dashboard = () => {
                         className="block w-full pl-10 pr-3 py-2 border border-gray-700 rounded-lg bg-gray-800 text-gray-300 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors"
                     />
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex overflow-x-auto gap-2 pb-2 hide-scroll" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                    <style>{`
+                        .hide-scroll::-webkit-scrollbar { display: none; }
+                    `}</style>
                     {CATEGORY_OPTIONS.map((cat) => (
                         <button
                             key={cat}

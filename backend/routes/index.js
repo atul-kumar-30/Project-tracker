@@ -1,24 +1,10 @@
 import express from 'express';
 import joi from 'joi';
 import mongoose from 'mongoose';
-import multer from 'multer';
 import path from 'path';
 import Project from '../models/index.js'
 import { authMiddleware } from '../middleware/auth.js'
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/');
-    },
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + path.extname(file.originalname));
-    }
-});
-const upload = multer({ 
-    storage: storage,
-    limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
-});
 
 const api = express.Router()
 api.use(authMiddleware)

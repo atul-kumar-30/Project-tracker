@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ['admin', 'manager', 'member'],
         default: 'member'
+    },
+    githubUsername: {
+        type: String,
+        default: ''
     }
 }, { timestamps: true });
 

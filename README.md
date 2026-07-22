@@ -6,11 +6,12 @@ This application serves as a central hub for your project portfolio. It allows y
 
 ## Features
 - **Clean Dashboard**: A responsive, grid-based dashboard showcasing your projects as beautiful cards.
-- **GitHub API Integration**: Automatically fetch and import your public GitHub repositories with a single click. The app intelligently maps repository details (descriptions, main languages, dates) directly into your portfolio!
-- **Two-Level Categorization**: Keep your UI organized by tagging projects with broad Top-Level Domains (e.g., Frontend, Backend, AI/ML) and specific Technologies (e.g., React, Python, Docker) using a smart multi-select dropdown.
+- **GitHub Integrations**: 
+  - **Profile Connection**: Save your GitHub username to your profile to instantly pull and import your repositories directly into your dashboard.
+  - **Smart URL Fetching**: Paste a GitHub URL when creating a project to auto-fill the title and description, saving you time.
+- **Comprehensive Categories**: Keep your portfolio organized with a comprehensive, single-level list of 24 distinct project domains (including AI/ML, NLP, MERN Stack, DevOps, and more) to perfectly classify your work.
 - **Search & Filtering**: Quickly find projects using the search bar or filter your dashboard seamlessly using the top-level domains.
 - **Visual Timeline**: A chronological timeline view that plots your projects based on their Start and End dates.
-- **Dedicated Integrations**: Add your GitHub repository links and Live Deployment URLs to quickly access your code and live projects directly from the dashboard.
 - **Status & Date Tracking**: Easily label projects as `Planning`, `Active`, or `Completed` and track their timelines.
 - **Profile Statistics**: A beautifully designed profile page that displays your live project statistics.
 - **Authentication**: Secure user login and signup to ensure your portfolio is private.

@@ -65,7 +65,7 @@ router.post('/login', async (req, res) => {
         res.send({ 
             data: {
                 token, 
-                user: { id: user._id, name: user.name, email: user.email, role: user.role } 
+                user: { id: user._id, name: user.name, email: user.email, role: user.role, githubUsername: user.githubUsername } 
             } 
         });
     } catch (e) {
@@ -76,6 +76,28 @@ router.post('/login', async (req, res) => {
 router.get('/profile', authMiddleware, async (req, res) => {
     try {
         const user = await User.findById(req.user.id).select('-password');
+        if (!user) return res.status(404).send({ error: true, message: 'User not found' });
+        res.send({ data: user });
+    } catch (e) {
+        res.status(500).send({ error: true, message: 'Server error' });
+    }
+});
+
+router.put('/profile/github', authMiddleware, async (req, res) => {
+    const schema = joi.object({
+        githubUsername: joi.string().allow('', null).optional()
+    });
+
+    const { error, value } = schema.validate(req.body);
+    if (error) return res.status(422).send({ error: true, message: error.details[0].message });
+
+    try {
+        const user = await User.findByIdAndUpdate(
+            req.user.id, 
+            { githubUsername: value.githubUsername || '' },
+            { new: true }
+        ).select('-password');
+        
         if (!user) return res.status(404).send({ error: true, message: 'User not found' });
         res.send({ data: user });
     } catch (e) {
