@@ -8,7 +8,7 @@ const Timeline = () => {
 
     const fetchProjects = async () => {
         try {
-            const { data } = await axios.get('http://localhost:9000/projects');
+            const { data } = await axios.get('/projects');
             // Sort by startDate
             const sorted = data.sort((a, b) => new Date(a.startDate || 0) - new Date(b.startDate || 0));
             setProjects(sorted);

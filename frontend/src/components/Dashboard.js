@@ -21,7 +21,7 @@ const Dashboard = () => {
 
     const fetchProjects = async () => {
         try {
-            const { data } = await axios.get('http://localhost:9000/projects');
+            const { data } = await axios.get('/projects');
             setProjects(data);
             setLoading(false);
         } catch (error) {
@@ -47,7 +47,7 @@ const Dashboard = () => {
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this project?")) return;
         try {
-            await axios.delete(`http://localhost:9000/project/${id}`);
+            await axios.delete(`/project/${id}`);
             toast.success("Project deleted successfully");
             fetchProjects();
         } catch (error) {

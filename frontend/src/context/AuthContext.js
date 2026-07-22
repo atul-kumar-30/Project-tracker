@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
 
     const fetchProfile = async () => {
         try {
-            const { data } = await axios.get('http://localhost:9000/auth/profile');
+            const { data } = await axios.get('/auth/profile');
             setUser(data.data);
         } catch (error) {
             console.error('Failed to fetch profile', error);
@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            const { data } = await axios.post('http://localhost:9000/auth/login', { email, password });
+            const { data } = await axios.post('/auth/login', { email, password });
             const token = data.data.token;
             localStorage.setItem('token', token);
             setToken(token);
@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
 
     const signup = async (name, email, password) => {
         try {
-            await axios.post('http://localhost:9000/auth/signup', { name, email, password });
+            await axios.post('/auth/signup', { name, email, password });
             toast.success('Signed up successfully. Please login.');
             return true;
         } catch (error) {

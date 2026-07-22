@@ -7,7 +7,7 @@ const Profile = () => {
     const [stats, setStats] = useState({ total: 0, active: 0, completed: 0 });
 
     useEffect(() => {
-        axios.get('http://localhost:9000/projects/')
+        axios.get('/projects/')
             .then((res) => {
                 const projects = res.data;
                 setStats({

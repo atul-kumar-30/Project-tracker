@@ -59,3 +59,14 @@ npm start
 ```
 
 The application will now be running at `http://localhost:3000`!
+
+## Deployment
+
+**1. Deploy Backend (Render)**
+- Host the `/backend` folder on Render.
+- Add your `MONGODB_PATH` and `JWT_SECRET` environment variables.
+- Add a `CORS_ORIGIN` variable matching your live Vercel frontend URL.
+
+**2. Deploy Frontend (Vercel)**
+- Host the `/frontend` folder on Vercel.
+- Add a `REACT_APP_API_URL` environment variable pointing to your live Render backend URL.
