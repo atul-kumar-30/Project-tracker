@@ -19,9 +19,9 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null, pre
     const CATEGORY_OPTIONS = [
         'Generative AI', 'AI/ML', 'Deep Learning', 'Computer Vision', 'NLP', 'LLM',
         'Frontend', 'Backend', 'Full Stack', 'MERN Stack',
-        'Web App', 'Mobile App', 'Desktop App',
+        'Web Applications', 'Mobile App', 'Desktop App',
         'API', 'Game Development', 'Compiler', 'Cybersecurity', 'Cloud', 'DevOps', 
-        'Blockchain', 'IoT', 'Automation', 'Data Science', 'Open Source'
+        'Blockchain', 'IoT', 'Automation', 'Data Science', 'Open Source', 'Database'
     ];
 
     const handleCategoryToggle = (cat) => {

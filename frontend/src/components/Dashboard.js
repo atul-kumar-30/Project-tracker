@@ -15,9 +15,9 @@ const Dashboard = () => {
         'All',
         'Generative AI', 'AI/ML', 'Deep Learning', 'Computer Vision', 'NLP', 'LLM',
         'Frontend', 'Backend', 'Full Stack', 'MERN Stack',
-        'Web App', 'Mobile App', 'Desktop App',
+        'Web Applications', 'Mobile App', 'Desktop App',
         'API', 'Game Development', 'Compiler', 'Cybersecurity', 'Cloud', 'DevOps', 
-        'Blockchain', 'IoT', 'Automation', 'Data Science', 'Open Source'
+        'Blockchain', 'IoT', 'Automation', 'Data Science', 'Open Source', 'Database'
     ];
 
     const filteredProjects = projects.filter(project => {
