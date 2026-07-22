@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import AddProjectModal from './AddProjectModal'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
