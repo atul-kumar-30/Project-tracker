@@ -122,8 +122,8 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <Dialog.Panel className="rounded-xl bg-gray-800 w-6/12 border border-gray-700 shadow-2xl overflow-hidden">
-                                <Dialog.Title as='div' className={'bg-gray-800/90 border-b border-gray-700 px-6 py-4 sticky top-0 flex justify-between items-center'}>
+                            <Dialog.Panel className="rounded-xl bg-gray-800 w-11/12 md:w-8/12 lg:w-6/12 border border-gray-700 shadow-2xl overflow-y-auto max-h-[90vh] flex flex-col">
+                                <Dialog.Title as='div' className={'bg-gray-800 border-b border-gray-700 px-6 py-4 sticky top-0 z-10 flex justify-between items-center'}>
                                     <h1 className="text-xl font-semibold text-white">{edit ? 'Edit Project' : 'Create Project'}</h1>
                                     <button onClick={() => closeModal()} className='text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg p-1.5 focus:outline-none transition-colors'>
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
