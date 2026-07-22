@@ -27,7 +27,15 @@ const project = new mongoose.Schema({
     links: [{
         name: String,
         url: String
-    }]
+    }],
+    githubLink: {
+        type: String,
+        default: ''
+    },
+    deployLink: {
+        type: String,
+        default: ''
+    }
 }, { timestamps: true })
 
 

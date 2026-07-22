@@ -107,9 +107,21 @@ const Dashboard = () => {
                                         </div>
                                     </div>
                                 </div>
-                                {project.links && project.links.length > 0 && (
+                                {((project.links && project.links.length > 0) || project.githubLink || project.deployLink) && (
                                     <div className="flex flex-wrap gap-2 mb-6">
-                                        {project.links.map((link, i) => (
+                                        {project.githubLink && (
+                                            <a href={project.githubLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center space-x-1.5 px-2.5 py-1.5 rounded-md bg-gray-700/50 hover:bg-gray-600 text-gray-200 hover:text-white text-xs font-semibold border border-gray-600 hover:border-gray-500 transition-colors shadow-sm">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                                                <span>GitHub</span>
+                                            </a>
+                                        )}
+                                        {project.deployLink && (
+                                            <a href={project.deployLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center space-x-1.5 px-2.5 py-1.5 rounded-md bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 hover:text-indigo-300 text-xs font-semibold border border-indigo-500/20 hover:border-indigo-500/50 transition-colors shadow-sm">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                                                <span>Live Demo</span>
+                                            </a>
+                                        )}
+                                        {project.links && project.links.map((link, i) => (
                                             <a key={i} href={link.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md bg-gray-700/50 hover:bg-indigo-500/20 text-gray-300 hover:text-indigo-300 text-xs font-medium border border-gray-600 hover:border-indigo-500/50 transition-colors">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3 h-3">
                                                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />

@@ -7,7 +7,8 @@ This application serves as a central hub for your project portfolio. It allows y
 ## Features
 - **Clean Dashboard**: A responsive, grid-based dashboard showcasing your projects as beautiful cards.
 - **Visual Timeline**: A chronological timeline view that plots your projects based on their Start and End dates.
-- **Asset Repository**: Attach multiple external links to each project so your important URLs are always in one place.
+- **Dedicated Integrations**: Add your GitHub repository links and Live Deployment URLs to quickly access your code and live projects directly from the dashboard.
+- **Asset Repository**: Attach any other external links (like Figma or Jira) to each project so your important URLs are always in one place.
 - **Status & Date Tracking**: Easily label projects as `Planning`, `Active`, or `Completed` and track their timelines.
 - **Profile Statistics**: A beautifully designed profile page that displays your live project statistics.
 - **Authentication**: Secure user login and signup to ensure your portfolio is private.

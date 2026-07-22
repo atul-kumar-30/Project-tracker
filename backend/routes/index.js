@@ -54,7 +54,9 @@ api.post('/project', async (req, res) => {
         links: joi.array().items(joi.object({
             name: joi.string().required(),
             url: joi.string().required()
-        })).optional()
+        })).optional(),
+        githubLink: joi.string().allow('', null).optional(),
+        deployLink: joi.string().allow('', null).optional()
     })
 
     // validation
@@ -89,7 +91,9 @@ api.put('/project/:id', async (req, res) => {
         links: joi.array().items(joi.object({
             name: joi.string().required(),
             url: joi.string().required()
-        })).optional()
+        })).optional(),
+        githubLink: joi.string().allow('', null).optional(),
+        deployLink: joi.string().allow('', null).optional()
     })
 
     // // validation
