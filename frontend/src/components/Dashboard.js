@@ -11,7 +11,10 @@ const Dashboard = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
 
-    const CATEGORY_OPTIONS = ['All', 'AI/ML', 'Full Stack', 'MERN Stack', 'SDE', 'Frontend', 'Backend'];
+    const CATEGORY_OPTIONS = [
+        'All', 'Frontend', 'Backend', 'AI/ML', 'Database', 'Cloud', 
+        'Mobile', 'Desktop', 'Programming', 'Security', 'Tools'
+    ];
 
     const filteredProjects = projects.filter(project => {
         const matchesSearch = project.title.toLowerCase().includes(searchQuery.toLowerCase()) || 

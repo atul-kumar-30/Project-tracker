@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import AddProjectModal from './AddProjectModal'
+import GithubImportModal from './GithubImportModal'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
@@ -7,6 +8,7 @@ const Sidebar = () => {
   const { logout } = useAuth();
 
   const [isModalOpen, setModalState] = useState(false)
+  const [isGithubModalOpen, setGithubModalState] = useState(false)
 
   const openModal = useCallback(() => {
     setModalState(true)
@@ -14,6 +16,14 @@ const Sidebar = () => {
 
   const closeModal = useCallback(() => {
     setModalState(false)
+  }, [])
+
+  const openGithubModal = useCallback(() => {
+    setGithubModalState(true)
+  }, [])
+
+  const closeGithubModal = useCallback(() => {
+    setGithubModalState(false)
   }, [])
 
 
@@ -51,12 +61,16 @@ const Sidebar = () => {
             <span>My Profile</span>
         </Link>
       </div>
-      <div className="px-4 mb-6">
+      <div className="px-4 mb-6 space-y-3">
         <button onClick={openModal} className='w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-sm py-2 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2 shadow-lg shadow-indigo-500/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-indigo-500'>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
             <path fillRule="evenodd" d="M12 5.25a.75.75 0 01.75.75v5.25H18a.75.75 0 010 1.5h-5.25V18a.75.75 0 01-1.5 0v-5.25H6a.75.75 0 010-1.5h5.25V6a.75.75 0 01.75-.75z" clipRule="evenodd" />
           </svg>
           <span>Create Project</span>
+        </button>
+        <button onClick={openGithubModal} className='w-full bg-gray-800 border border-gray-700 hover:bg-gray-700 text-gray-300 hover:text-white font-medium text-sm py-2 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-gray-500'>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+          <span>Import from GitHub</span>
         </button>
       </div>
 
@@ -73,6 +87,7 @@ const Sidebar = () => {
       </div>
 
       <AddProjectModal isModalOpen={isModalOpen} closeModal={closeModal} />
+      <GithubImportModal isModalOpen={isGithubModalOpen} closeModal={closeGithubModal} />
     </div>
   )
 }

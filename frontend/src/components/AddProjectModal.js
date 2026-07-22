@@ -11,13 +11,34 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [categories, setCategories] = useState([]);
+    const [customCategory, setCustomCategory] = useState('');
     const [githubLink, setGithubLink] = useState('');
     const [deployLink, setDeployLink] = useState('');
 
-    const CATEGORY_OPTIONS = ['AI/ML', 'Full Stack', 'MERN Stack', 'SDE', 'Frontend', 'Backend'];
+    const TOP_LEVEL_DOMAINS = [
+        'Frontend', 'Backend', 'AI/ML', 'Database', 'Cloud', 
+        'Mobile', 'Desktop', 'Programming', 'Security', 'Tools'
+    ];
+    
+    const COMMON_TECHNOLOGIES = [
+        'React', 'Next.js', 'Vue.js', 'Angular', 'Tailwind CSS', 'Bootstrap', 'Redux', 
+        'Node.js', 'Express', 'Django', 'Flask', 'Spring Boot', 'FastAPI',
+        'MongoDB', 'PostgreSQL', 'MySQL', 'Redis', 'Firebase',
+        'AWS', 'GCP', 'Azure', 'Docker', 'Kubernetes', 
+        'Python', 'JavaScript', 'TypeScript', 'Java', 'C++', 'Go', 'Rust', 'C#'
+    ];
 
     const handleCategoryToggle = (cat) => {
         setCategories(prev => prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]);
+    };
+
+    const handleAddCustomCategory = (e) => {
+        e.preventDefault();
+        const trimmed = customCategory.trim();
+        if (trimmed && !categories.includes(trimmed)) {
+            setCategories([...categories, trimmed]);
+        }
+        setCustomCategory('');
     };
 
     useEffect(() => {
@@ -180,9 +201,9 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
                                     </div>
 
                                     <div className='mb-6'>
-                                        <label className='block text-sm font-medium text-gray-300 mb-2'>Categories</label>
-                                        <div className="flex flex-wrap gap-2">
-                                            {CATEGORY_OPTIONS.map((cat) => (
+                                        <label className='block text-sm font-medium text-gray-300 mb-2'>Top-Level Domains</label>
+                                        <div className="flex flex-wrap gap-2 mb-4">
+                                            {TOP_LEVEL_DOMAINS.map((cat) => (
                                                 <button
                                                     key={cat}
                                                     type="button"
@@ -192,6 +213,55 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
                                                     {cat}
                                                 </button>
                                             ))}
+                                        </div>
+
+                                        <label className='block text-sm font-medium text-gray-300 mb-2'>Technologies</label>
+                                        <div className="flex flex-wrap gap-2 mb-3">
+                                            {categories.filter(cat => !TOP_LEVEL_DOMAINS.includes(cat)).map((cat) => (
+                                                <button
+                                                    key={cat}
+                                                    type="button"
+                                                    onClick={() => handleCategoryToggle(cat)}
+                                                    className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors bg-indigo-500/20 text-indigo-300 border-indigo-500/30 hover:bg-red-500/20 hover:text-red-400 hover:border-red-500/30 flex items-center space-x-1`}
+                                                >
+                                                    <span>{cat}</span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3 h-3">
+                                                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                </button>
+                                            ))}
+                                            {categories.filter(cat => !TOP_LEVEL_DOMAINS.includes(cat)).length === 0 && (
+                                                <span className="text-xs text-gray-500 italic py-1.5">No specific technologies added yet.</span>
+                                            )}
+                                        </div>
+                                        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                                            <select 
+                                                value={customCategory}
+                                                onChange={(e) => setCustomCategory(e.target.value)}
+                                                className="border border-gray-600 bg-gray-700 text-white rounded-lg w-full sm:w-1/3 text-sm py-2 px-3 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition-all"
+                                            >
+                                                <option value="">Select a tech...</option>
+                                                {COMMON_TECHNOLOGIES.filter(t => !categories.includes(t)).map(tech => (
+                                                    <option key={tech} value={tech}>{tech}</option>
+                                                ))}
+                                            </select>
+                                            <input 
+                                                type="text" 
+                                                value={customCategory}
+                                                onChange={(e) => setCustomCategory(e.target.value)}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter') handleAddCustomCategory(e);
+                                                }}
+                                                placeholder="Or type a custom technology..." 
+                                                className="border border-gray-600 bg-gray-700 text-white rounded-lg w-full text-sm py-2 px-3 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition-all placeholder-gray-400"
+                                            />
+                                            <button 
+                                                type="button" 
+                                                onClick={handleAddCustomCategory}
+                                                className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg transition-colors focus:outline-none flex-shrink-0"
+                                            >
+                                                Add
+                                            </button>
                                         </div>
                                     </div>
                                     <div className='flex justify-end items-center space-x-3 pt-2 border-t border-gray-700'>

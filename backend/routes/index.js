@@ -51,10 +51,7 @@ api.post('/project', async (req, res) => {
         status: joi.string().valid('Planning', 'Active', 'Completed').optional(),
         startDate: joi.date().allow(null, '').optional(),
         endDate: joi.date().allow(null, '').optional(),
-        links: joi.array().items(joi.object({
-            name: joi.string().required(),
-            url: joi.string().required()
-        })).optional(),
+        categories: joi.array().items(joi.string()).optional(),
         githubLink: joi.string().allow('', null).optional(),
         deployLink: joi.string().allow('', null).optional()
     })
@@ -88,10 +85,7 @@ api.put('/project/:id', async (req, res) => {
         status: joi.string().valid('Planning', 'Active', 'Completed').optional(),
         startDate: joi.date().allow(null, '').optional(),
         endDate: joi.date().allow(null, '').optional(),
-        links: joi.array().items(joi.object({
-            name: joi.string().required(),
-            url: joi.string().required()
-        })).optional(),
+        categories: joi.array().items(joi.string()).optional(),
         githubLink: joi.string().allow('', null).optional(),
         deployLink: joi.string().allow('', null).optional()
     })
