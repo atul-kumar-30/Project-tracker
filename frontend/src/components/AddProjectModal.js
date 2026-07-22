@@ -10,9 +10,15 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
     const [status, setStatus] = useState('Planning');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
-    const [links, setLinks] = useState([{ name: '', url: '' }]);
+    const [categories, setCategories] = useState([]);
     const [githubLink, setGithubLink] = useState('');
     const [deployLink, setDeployLink] = useState('');
+
+    const CATEGORY_OPTIONS = ['AI/ML', 'Full Stack', 'MERN Stack', 'SDE', 'Frontend', 'Backend'];
+
+    const handleCategoryToggle = (cat) => {
+        setCategories(prev => prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]);
+    };
 
     useEffect(() => {
         if (edit && isModalOpen) {
@@ -24,7 +30,7 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
                     setStatus(data.status || 'Planning')
                     setStartDate(data.startDate ? new Date(data.startDate).toISOString().split('T')[0] : '')
                     setEndDate(data.endDate ? new Date(data.endDate).toISOString().split('T')[0] : '')
-                    setLinks(data.links && data.links.length > 0 ? data.links : [{ name: '', url: '' }])
+                    setCategories(data.categories || [])
                     setGithubLink(data.githubLink || '')
                     setDeployLink(data.deployLink || '')
                 })
@@ -38,16 +44,13 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
     const handleSubmit = (e) => {
         e.preventDefault()
         
-        // Filter out empty links
-        const validLinks = links.filter(l => l.name.trim() !== '' && l.url.trim() !== '');
-
         const payload = {
             title, 
             description: desc, 
             status, 
             startDate: startDate || null, 
             endDate: endDate || null, 
-            links: validLinks,
+            categories,
             githubLink: githubLink || '',
             deployLink: deployLink || ''
         };
@@ -64,7 +67,7 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
                     setStatus('Planning')
                     setStartDate('')
                     setEndDate('')
-                    setLinks([{ name: '', url: '' }])
+                    setCategories([])
                     setGithubLink('')
                     setDeployLink('')
                 })
@@ -177,54 +180,19 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
                                     </div>
 
                                     <div className='mb-6'>
-                                        <div className="flex justify-between items-center mb-2">
-                                            <label className='block text-sm font-medium text-gray-300'>Additional Links</label>
-                                            <button 
-                                                type="button" 
-                                                onClick={() => setLinks([...links, { name: '', url: '' }])}
-                                                className="text-indigo-400 hover:text-indigo-300 text-xs font-semibold flex items-center"
-                                            >
-                                                + Add Link
-                                            </button>
-                                        </div>
-                                        {links.map((link, index) => (
-                                            <div key={index} className="flex space-x-2 mb-2">
-                                                <input 
-                                                    value={link.name} 
-                                                    onChange={(e) => {
-                                                        const newLinks = [...links];
-                                                        newLinks[index].name = e.target.value;
-                                                        setLinks(newLinks);
-                                                    }} 
-                                                    type="text" 
-                                                    placeholder="Link Name (e.g. Figma)" 
-                                                    className='border border-gray-600 bg-gray-700 text-white rounded-lg w-1/3 text-sm py-2 px-3 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition-all placeholder-gray-400' 
-                                                />
-                                                <input 
-                                                    value={link.url} 
-                                                    onChange={(e) => {
-                                                        const newLinks = [...links];
-                                                        newLinks[index].url = e.target.value;
-                                                        setLinks(newLinks);
-                                                    }} 
-                                                    type="url" 
-                                                    placeholder="URL (https://...)" 
-                                                    className='border border-gray-600 bg-gray-700 text-white rounded-lg w-full text-sm py-2 px-3 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition-all placeholder-gray-400' 
-                                                />
-                                                <button 
+                                        <label className='block text-sm font-medium text-gray-300 mb-2'>Categories</label>
+                                        <div className="flex flex-wrap gap-2">
+                                            {CATEGORY_OPTIONS.map((cat) => (
+                                                <button
+                                                    key={cat}
                                                     type="button"
-                                                    onClick={() => {
-                                                        const newLinks = links.filter((_, i) => i !== index);
-                                                        setLinks(newLinks);
-                                                    }}
-                                                    className="text-gray-500 hover:text-red-400 p-2"
+                                                    onClick={() => handleCategoryToggle(cat)}
+                                                    className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${categories.includes(cat) ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-gray-700/50 text-gray-300 border-gray-600 hover:border-gray-500'}`}
                                                 >
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                                    </svg>
+                                                    {cat}
                                                 </button>
-                                            </div>
-                                        ))}
+                                            ))}
+                                        </div>
                                     </div>
                                     <div className='flex justify-end items-center space-x-3 pt-2 border-t border-gray-700'>
                                         <button type="button" onClick={() => closeModal()} className="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white bg-gray-700 hover:bg-gray-600 border border-gray-600 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-gray-500">Cancel</button>

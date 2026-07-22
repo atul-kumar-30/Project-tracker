@@ -24,9 +24,8 @@ const project = new mongoose.Schema({
         type: Date,
         default: null
     },
-    links: [{
-        name: String,
-        url: String
+    categories: [{
+        type: String
     }],
     githubLink: {
         type: String,

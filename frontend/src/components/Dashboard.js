@@ -8,6 +8,17 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(true);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [editProjectId, setEditProjectId] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('All');
+
+    const CATEGORY_OPTIONS = ['All', 'AI/ML', 'Full Stack', 'MERN Stack', 'SDE', 'Frontend', 'Backend'];
+
+    const filteredProjects = projects.filter(project => {
+        const matchesSearch = project.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                              (project.description && project.description.toLowerCase().includes(searchQuery.toLowerCase()));
+        const matchesCategory = selectedCategory === 'All' || (project.categories && project.categories.includes(selectedCategory));
+        return matchesSearch && matchesCategory;
+    });
 
     const openEditModal = (id) => {
         setEditProjectId(id);
@@ -61,19 +72,47 @@ const Dashboard = () => {
         <div className="p-8 bg-gray-900 min-h-screen w-full">
             <div className="flex justify-between items-center mb-8">
                 <h1 className="text-3xl font-bold text-white">Projects</h1>
-                <span className="text-gray-400 font-medium">Total Projects: {projects.length}</span>
+                <span className="text-gray-400 font-medium">Total Projects: {filteredProjects.length}</span>
             </div>
             
-            {projects.length === 0 ? (
+            <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="relative w-full md:w-96">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <input
+                        type="text"
+                        placeholder="Search projects..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="block w-full pl-10 pr-3 py-2 border border-gray-700 rounded-lg bg-gray-800 text-gray-300 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors"
+                    />
+                </div>
+                <div className="flex flex-wrap gap-2">
+                    {CATEGORY_OPTIONS.map((cat) => (
+                        <button
+                            key={cat}
+                            onClick={() => setSelectedCategory(cat)}
+                            className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${selectedCategory === cat ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-gray-800 text-gray-400 border-gray-700 hover:border-gray-500 hover:text-gray-300'}`}
+                        >
+                            {cat}
+                        </button>
+                    ))}
+                </div>
+            </div>
+            
+            {filteredProjects.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-20 text-gray-500">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-16 h-16 mb-4 opacity-50">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z" />
                     </svg>
-                    <p className="text-lg">No projects found. Click "Add Project" to get started.</p>
+                    <p className="text-lg">No projects match your filter.</p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {projects.map((project) => (
+                    {filteredProjects.map((project) => (
                         <div key={project._id} className="bg-gray-800/80 backdrop-blur-md p-6 rounded-xl shadow-lg border border-gray-700 hover:border-indigo-500 transition-all flex flex-col justify-between group">
                             <div>
                                 <div className="flex justify-between items-start mb-2">
@@ -107,7 +146,16 @@ const Dashboard = () => {
                                         </div>
                                     </div>
                                 </div>
-                                {((project.links && project.links.length > 0) || project.githubLink || project.deployLink) && (
+                                {project.categories && project.categories.length > 0 && (
+                                    <div className="flex flex-wrap gap-1 mb-4">
+                                        {project.categories.map((cat, i) => (
+                                            <span key={i} className="px-2 py-0.5 rounded text-[10px] font-semibold bg-gray-700 text-gray-300">
+                                                {cat}
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
+                                {(project.githubLink || project.deployLink) && (
                                     <div className="flex flex-wrap gap-2 mb-6">
                                         {project.githubLink && (
                                             <a href={project.githubLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center space-x-1.5 px-2.5 py-1.5 rounded-md bg-gray-700/50 hover:bg-gray-600 text-gray-200 hover:text-white text-xs font-semibold border border-gray-600 hover:border-gray-500 transition-colors shadow-sm">
@@ -121,14 +169,6 @@ const Dashboard = () => {
                                                 <span>Live Demo</span>
                                             </a>
                                         )}
-                                        {project.links && project.links.map((link, i) => (
-                                            <a key={i} href={link.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md bg-gray-700/50 hover:bg-indigo-500/20 text-gray-300 hover:text-indigo-300 text-xs font-medium border border-gray-600 hover:border-indigo-500/50 transition-colors">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3 h-3">
-                                                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
-                                                </svg>
-                                                <span>{link.name}</span>
-                                            </a>
-                                        ))}
                                     </div>
                                 )}
                             </div>
