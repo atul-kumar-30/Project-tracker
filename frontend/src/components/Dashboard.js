@@ -12,12 +12,12 @@ const Dashboard = () => {
     const [selectedCategory, setSelectedCategory] = useState('All');
 
     const CATEGORY_OPTIONS = [
-        'All',
+        'All', 'Database',
         'Generative AI', 'AI/ML', 'Deep Learning', 'Computer Vision', 'NLP', 'LLM',
         'Frontend', 'Backend', 'Full Stack', 'MERN Stack',
         'Web Applications', 'Mobile App', 'Desktop App',
         'API', 'Game Development', 'Compiler', 'Cybersecurity', 'Cloud', 'DevOps', 
-        'Blockchain', 'IoT', 'Automation', 'Data Science', 'Open Source', 'Database'
+        'Blockchain', 'IoT', 'Automation', 'Data Science', 'Open Source'
     ];
 
     const filteredProjects = projects.filter(project => {

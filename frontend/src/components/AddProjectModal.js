@@ -17,11 +17,11 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null, pre
     const [isFetchingRepo, setIsFetchingRepo] = useState(false);
 
     const CATEGORY_OPTIONS = [
-        'Generative AI', 'AI/ML', 'Deep Learning', 'Computer Vision', 'NLP', 'LLM',
+        'Database', 'Generative AI', 'AI/ML', 'Deep Learning', 'Computer Vision', 'NLP', 'LLM',
         'Frontend', 'Backend', 'Full Stack', 'MERN Stack',
         'Web Applications', 'Mobile App', 'Desktop App',
         'API', 'Game Development', 'Compiler', 'Cybersecurity', 'Cloud', 'DevOps', 
-        'Blockchain', 'IoT', 'Automation', 'Data Science', 'Open Source', 'Database'
+        'Blockchain', 'IoT', 'Automation', 'Data Science', 'Open Source'
     ];
 
     const handleCategoryToggle = (cat) => {
