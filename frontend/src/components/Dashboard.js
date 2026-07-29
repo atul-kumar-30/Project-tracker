@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import AddProjectModal from './AddProjectModal';
+import LoadingSpinner from './LoadingSpinner';
 
 const Dashboard = () => {
     const [projects, setProjects] = useState([]);
@@ -73,7 +74,7 @@ const Dashboard = () => {
         }
     };
 
-    if (loading) return <div className="p-8 text-white">Loading projects...</div>;
+    if (loading) return <LoadingSpinner fullScreen={true} message="Loading projects..." />;
 
     return (
         <div className="p-8 bg-gray-900 min-h-screen w-full">
