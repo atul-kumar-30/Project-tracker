@@ -11,9 +11,7 @@ This application serves as a central hub for your project portfolio. It allows y
 | **Frontend** | React.js, TailwindCSS, HeadlessUI, React Router, Axios |
 | **Backend** | Node.js, Express.js, MongoDB, Mongoose, Joi, JSONWebToken |
 
-## Live Demo
-
-[Project Tracker Live Demo](https://project-tracker-rust-six.vercel.app/)
+> 🚀 **[Experience the Live Demo Here](https://project-tracker-rust-six.vercel.app/)**
 
 ## Features
 - **Clean Dashboard & Navigation**: A responsive, grid-based dashboard showcasing your projects as beautiful cards, complete with a dynamic sidebar that highlights your current active page.
