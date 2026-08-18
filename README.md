@@ -4,23 +4,30 @@ A beautifully designed, full-stack application for managing and visualizing your
 
 This application serves as a central hub for your project portfolio. It allows you to maintain a dashboard of your ongoing and completed projects, tracking their statuses, start/end dates, and external links (like Figma designs or GitHub repos).
 
+## Tech Stack
+
+| Domain | Technologies |
+| :--- | :--- |
+| **Frontend** | React.js, TailwindCSS, HeadlessUI, React Router, Axios |
+| **Backend** | Node.js, Express.js, MongoDB, Mongoose, Joi, JSONWebToken |
+
+## Live Demo
+
+[Project Tracker Live Demo](https://project-tracker-rust-six.vercel.app/)
+
 ## Features
 - **Clean Dashboard & Navigation**: A responsive, grid-based dashboard showcasing your projects as beautiful cards, complete with a dynamic sidebar that highlights your current active page.
 - **GitHub Integrations**: 
   - **Profile Connection**: Save your GitHub username to your profile to instantly pull and import your repositories directly into your dashboard.
   - **Smart URL Fetching**: Paste a GitHub URL when creating a project to instantly auto-fill all data, including the title, description, start/end dates, categories, and live deployment URLs!
-  - **Smart Description Extractor**: If your repository doesn't have a short "About" description, the app will automatically download and parse your `README.md` file to extract a clean, perfectly-sized summary for your dashboard.
+  - **Smart Description Extractor**: If your repository doesn't have a short "About" description, the app will automatically download and parse your README.md file to extract a clean, perfectly-sized summary for your dashboard.
 - **Comprehensive Categories**: Keep your portfolio organized with a comprehensive, single-level list of 25 distinct project domains (including Database, AI/ML, NLP, MERN Stack, DevOps, Web Applications, and more) to perfectly classify your work.
 - **Search & Filtering**: Quickly find projects using the search bar or filter your dashboard seamlessly using the top-level domains.
 - **Visual Timeline**: A chronological timeline view that plots your projects based on their Start and End dates.
-- **Status & Date Tracking**: Easily label projects as `Planning`, `Active`, or `Completed` and track their timelines.
+- **Status & Date Tracking**: Easily label projects as Planning, Active, or Completed and track their timelines.
 - **Profile Statistics**: A beautifully designed profile page that displays your live project statistics.
 - **Authentication**: Secure user login and signup to ensure your portfolio is private.
 - **Premium Dark Mode**: A sleek, modern dark mode UI built with TailwindCSS.
-
-## Tech Stack
-- **Frontend**: React.js, TailwindCSS, HeadlessUI, React Router, Axios
-- **Backend**: Node.js, Express.js, MongoDB, Mongoose, Joi, JSONWebToken
 
 ## Setup Instructions
 
